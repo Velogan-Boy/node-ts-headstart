@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column , Repository} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Sample {
@@ -8,5 +8,4 @@ export class Sample {
    @Column()
    sample: string;
 }
-
 

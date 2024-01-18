@@ -1,27 +1,24 @@
-import { ValidationError, validationResult } from 'express-validator';
-
 import { Request, Response, NextFunction } from 'express';
+import { AnyZodObject, ZodError } from 'zod';
 
-interface ExtractedError {
-   [param: string]: string;
-}
+export const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
+   try {
+      schema.parse({
+         params: req.params,
+         query: req.query,
+         body: req.body,
+      });
 
-export const validate = (req: Request, res: Response, next: NextFunction) => {
-   const errors = validationResult(req);
-
-   if (errors.isEmpty()) {
-      return next();
+      next();
+   } catch (error) {
+      if (error instanceof ZodError) {
+         return res.status(400).json({
+            status: 'fail',
+            errors: error.errors,
+         });
+      }
+      next(error);
    }
-
-   const extractedErrors: ExtractedError[] = [];
-
-   errors.array().map((err: ValidationError) => extractedErrors.push(err.msg));
-
-   return res.status(400).send({
-      message: 'Bad Request',
-      errors: extractedErrors,
-   });
 };
 
 export * from './sample.validator';
-

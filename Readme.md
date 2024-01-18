@@ -2,19 +2,16 @@
 
 This repository provides a headstart for developing a TypeScript Node.js backend application using Express, TypeORM, and other related technologies. It offers a structured foundation with boilerplate code and best practices to accelerate your development process.
 
-> Note:  Don't forget, this structure could be highly opinionated and you can always modify it to suit your needs.
+> Note: Don't forget, this structure could be highly opinionated and you can always modify it to suit your needs.
 
 ## Tech Stack
 
-
-- [Node.js](https://nodejs.org/en/)
-- [Express](https://expressjs.com/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [TypeORM](https://typeorm.io/)
-- [JWT](https://jwt.io/)
-- [Bcrypt](https://www.npmjs.com/package/bcrypt)
-- [Express Validator](https://express-validator.github.io/)
-
+-  [Node.js](https://nodejs.org/en/)
+-  [Express](https://expressjs.com/)
+-  [TypeScript](https://www.typescriptlang.org/)
+-  [TypeORM](https://typeorm.io/)
+-  [ZOD](https://zod.dev/)
+-  [JWT](https://jwt.io/)
 
 ## Prerequisites
 
@@ -53,14 +50,10 @@ Make sure you have the following dependencies installed on your machine:
    ```bash
    npm run dev
    ```
-   
+
 The server should now be running at http://localhost:8000.
 
-
-> Note: Don't forget to uncomment the .env files in  .gitignore file if you want to push your code to a remote repository.
+> Note: Don't forget to uncomment the .env files in .gitignore file if you want to push your code to a remote repository.
 
 ## Happy Coding!
-
-
-
 

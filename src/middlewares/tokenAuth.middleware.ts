@@ -1,48 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
-import { Repository } from 'typeorm';
-import { Sample } from '../models';
-import AppDataSource from '../data-source';
-import { verifyJWT } from '../services/jwtAuth';
 
-interface MyRequest extends Request {
-   sample: Sample;
-}
+import { catchAsync, AppError, verifyJWT } from '@/utils';
 
-export const tokenAuth = async (req: MyRequest, res: Response, next: NextFunction) => {
-   try {
-      const token: string = req.headers['authorization'];
+import { findSampleById } from '@/services';
 
-      if (!token) return res.status(400).send({ auth: false, message: 'Bad Request' });
+export const tokenAuth = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+   const token = req.headers['authorization'];
 
-      let tokenPayload: JwtPayload | string = verifyJWT(token);
+   // check if the token exists
+   if (!token) return next(new AppError(401, 'You are not logged in'));
 
-      if (!tokenPayload) {
-         return res.status(400).send({
-            auth: false,
-            message: 'Invalid token.',
-         });
-      }
+   // decrypt token and get the payload
+   let tokenPayload = verifyJWT(token);
 
-      const sampleRepository: Repository<Sample> = AppDataSource?.getRepository(Sample);
-
-      const sample = await sampleRepository.findOne({
-         where: {
-            id: +tokenPayload,
-         },
-      });
-
-      if (!sample) {
-         return res.status(401).json({
-            auth: false,
-            message: 'Sample Not found',
-         });
-      }
-
-      req.sample = sample;
-      next();
-   } catch (err) {
-      next(err);
+   if (!tokenPayload) {
+      return next(new AppError(401, `Invalid token or user doesn't exist`));
    }
-};
+
+   // check if the sample exists
+   const sample = await findSampleById(+tokenPayload);
+
+   if (!sample) return next(new AppError(401, `Invalid token or session has expired`));
+
+   res.locals.sample = sample;
+
+   next();
+});
 

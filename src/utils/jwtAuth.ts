@@ -3,7 +3,7 @@ import jwt, { Algorithm, JwtPayload } from 'jsonwebtoken';
 export const createJWT = (payload: string) => {
    let token: string = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: 5 * 86400,
-      algorithm: process.env.SIGNING_ALGO as Algorithm
+      algorithm: process.env.JWT_SIGNING_ALGO as Algorithm
    })
 
    return token;
